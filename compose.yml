@@ -1,0 +1,29 @@
+services:
+  mlops-build:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: build
+    image: mlops-build:latest
+  mlops-dev:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: dev
+      args:
+        - USER_NAME=${USER_NAME}
+        - USER_UID=${USER_UID}
+        - USER_GID=${USER_GID}
+    container_name: dev_container
+    image: mlops-dev:latest
+    env_file: .env
+    volumes:
+      - .:/workspace
+      - ~/.ssh:${HOME}/.ssh
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: ${COUNT}
+              capabilities: [ gpu ]

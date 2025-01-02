@@ -1,0 +1,25 @@
+{
+  "name": "MlOps DevContainer",
+  "dockerComposeFile": "../compose.yml",
+  "service": "mlops-dev",
+  "runServices": [
+    "mlops-dev"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "phind.phind",
+        "Codeium.codeium",
+        "ms-python.python",
+        "ms-python.pylint",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "initializeCommand": "./setup_env.sh",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "overrideCommand": true
+}
