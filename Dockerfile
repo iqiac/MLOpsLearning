@@ -1,8 +1,5 @@
 FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime AS build
 
-# Remove default user
-RUN if [ -n "$(id -u ubuntu)" ]; then userdel -r ubuntu; fi
-
 # Install necessary packages
 RUN apt update && apt install -y \
   build-essential
@@ -19,11 +16,16 @@ RUN conda install -y \
   notebook \
   pandas \
   matplotlib \
-  scikit-learn
+  scikit-learn \
+  seaborn \
+  torchvision
 
 RUN conda update --all -y
 
 FROM build AS dev
+
+# Remove default user
+RUN if [ -n "$(id -u ubuntu)" ]; then userdel -r ubuntu; fi
 
 # Define arguments
 ARG USER_NAME
