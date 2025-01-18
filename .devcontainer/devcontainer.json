@@ -14,7 +14,8 @@
         "ms-python.pylint",
         "ms-python.black-formatter",
         "ms-python.isort",
-        "ms-toolsai.jupyter"
+        "ms-toolsai.jupyter",
+        "Iterative.dvc"
       ]
     }
   },
