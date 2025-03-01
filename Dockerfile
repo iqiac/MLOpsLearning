@@ -66,7 +66,7 @@ RUN apt upgrade -y && apt clean && rm -rf /var/lib/apt/lists/*
 # Create non-root user
 RUN groupadd --gid ${USER_GID} ${USER_NAME} \
   && useradd -s /bin/bash -s /bin/zsh \
-    --uid ${USER_UID} --gid ${USER_GID} -m ${USER_NAME} \
+  --uid ${USER_UID} --gid ${USER_GID} -m ${USER_NAME} \
   && usermod -aG mambauser ${USER_NAME}
 RUN echo "${USER_NAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
@@ -75,5 +75,10 @@ USER ${USER_NAME}
 
 # Setup zsh shell with Oh-My-Zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Activate micromamba in zsh
+RUN echo \
+  'eval "$(micromamba shell hook zsh)" && micromamba activate' \
+  >> ~/.zshrc
 
 ENTRYPOINT [ "zsh" ]
