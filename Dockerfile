@@ -1,18 +1,19 @@
-FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime AS build
+# Image uses cuda 12.6, depending on the machine, you might need to change
+# - the cuda version
+# - the pytorch version
+FROM mambaorg/micromamba:2-cuda12.6.3-ubuntu24.04 AS build
 
-# Define arguments
-ARG CORES
+USER root
 
 # Install necessary packages
 RUN apt update && apt install -y \
   make
 RUN apt upgrade -y && apt clean && rm -rf /var/lib/apt/lists/*
 
-# Instal python packages
-RUN mamba install -y \
+# Install python packages
+RUN micromamba install -n base -y \
   -c conda-forge \
-  -c pytorch \
-  -c nvidia \
+  python \
   pytest \
   pylint \
   black \
@@ -22,16 +23,20 @@ RUN mamba install -y \
   matplotlib \
   scikit-learn \
   seaborn \
-  torchvision \
   opencv \
   dvc
+RUN micromamba update --all -y && micromamba clean --all -y
 
-RUN mamba update --all -y && mamba clean --all -y
+# pytorch-cuda 12.6 needs special care,
+# cf. https://pytorch.org/get-started/locally/
+RUN micromamba run -n base \
+  pip3 install \
+  --index-url https://download.pytorch.org/whl/cu126 \
+  --no-cache-dir \
+  torch \
+  torchvision
 
-# Grant read, write, and execute permissions to all users
-RUN find /opt/conda -type f -print0 | xargs -0 -P ${CORES} chmod 777 \
-  && find /opt/conda -type d | xargs -P ${CORES} chmod 777
-
+#===============================================================================
 FROM build AS dev
 
 # Remove default user
@@ -42,7 +47,7 @@ ARG USER_NAME
 ARG USER_UID
 ARG USER_GID
 
-# Install necessary packages            
+# Install necessary packages
 RUN apt update && apt install -y \
   sudo \
   zsh \
@@ -60,7 +65,9 @@ RUN apt upgrade -y && apt clean && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
 RUN groupadd --gid ${USER_GID} ${USER_NAME} \
-  && useradd -s /bin/bash --uid ${USER_UID} --gid ${USER_GID} -m ${USER_NAME} -s /bin/zsh
+  && useradd -s /bin/bash -s /bin/zsh \
+    --uid ${USER_UID} --gid ${USER_GID} -m ${USER_NAME} \
+  && usermod -aG mambauser ${USER_NAME}
 RUN echo "${USER_NAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Change to non-root user

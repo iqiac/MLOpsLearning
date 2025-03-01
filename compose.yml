@@ -4,10 +4,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
       target: build
-      args:
-        - CORES=${CORES}
     image: mlops-build:latest
-    env_file: .env
   mlops-dev:
     build:
       context: .
@@ -17,7 +14,6 @@ services:
         - USER_NAME=${USER_NAME}
         - USER_UID=${USER_UID}
         - USER_GID=${USER_GID}
-        - CORES=${CORES}
     container_name: dev_container
     image: mlops-dev:latest
     env_file: .env
