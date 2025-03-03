@@ -1,0 +1,26 @@
+{
+    "state": {
+        "seed": 42
+    },
+    "model": {
+        "weights_path": "",
+        "save_path": "",
+        "in_channels": 3,
+        "num_classes": 1
+    },
+    "train": {
+        "train_val_test_split": [
+            0.8,
+            0.1,
+            0.1
+        ],
+        "epochs": 10,
+        "batch_size": 8,
+        "lr": 3e-4,
+        "cross_validation": true
+    },
+    "data": {
+        "img_path": "../data/Images",
+        "mask_path": "../data/Labels"
+    }
+}
