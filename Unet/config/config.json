@@ -1,26 +1,46 @@
 {
     "state": {
-        "seed": 42
+        "seed": 1234,
+        "mode": "predict"
     },
     "model": {
-        "weights_path": "",
-        "save_path": "",
+        "weights_path": "../weights/weights.pth",
+        "save_path": "../weights/weights.pth",
         "in_channels": 3,
-        "num_classes": 1
+        "num_classes": 1,
+        "dropout": 0.1
     },
-    "train": {
-        "train_val_test_split": [
+    "trainer": {
+        "use_pretrained": false,
+        "train_val_split": [
             0.8,
-            0.1,
-            0.1
+            0.2
         ],
-        "epochs": 10,
+        "epochs": 30,
         "batch_size": 8,
-        "lr": 3e-4,
-        "cross_validation": true
+        "lr": 1e-4
+    },
+    "predictor": {
+        "threshold": 0.5,
+        "alpha": 0.3,
+        "highlight_color": [
+            0,
+            255,
+            0
+        ]
     },
     "data": {
         "img_path": "../data/Images",
-        "mask_path": "../data/Labels"
+        "mask_path": "../data/Labels",
+        "predict_src": "../data/InferenceImgs",
+        "predict_dst": "../data/InferencePreds",
+        "train_resize": [
+            256,
+            256
+        ],
+        "predict_resize": [
+            1024,
+            1024
+        ]
     }
 }
