@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Unet Training",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Unet/src/main.py",
+            "cwd": "${workspaceFolder}/Unet/src",
+            "args": [
+                "--mode",
+                "train"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true, // false to debug library code if needed
+            "env": {}
+        },
+        {
+            "name": "Unet Inference",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Unet/src/main.py",
+            "cwd": "${workspaceFolder}/Unet/src",
+            "args": [
+                "--mode",
+                "predict"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true, // false to debug library code if needed
+            "env": {}
+        }
+    ]
+}
