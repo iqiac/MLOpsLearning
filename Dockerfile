@@ -14,6 +14,7 @@ RUN apt upgrade -y && apt clean && rm -rf /var/lib/apt/lists/*
 RUN micromamba install -n base -y \
   -c conda-forge \
   python \
+  poetry \
   pytest \
   pylint \
   black \
@@ -30,7 +31,7 @@ RUN micromamba update --all -y && micromamba clean --all -y
 # pytorch-cuda 12.6 needs special care,
 # cf. https://pytorch.org/get-started/locally/
 RUN micromamba run -n base \
-  pip3 install \
+  pip install \
   --index-url https://download.pytorch.org/whl/cu126 \
   --no-cache-dir \
   torch \
