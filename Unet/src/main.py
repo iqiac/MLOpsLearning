@@ -5,6 +5,7 @@ import torch
 from dataset import SegmentationDataset
 from model import UNet
 from predictor import Predictor
+from torchinfo import summary
 from trainer import Trainer
 
 
@@ -68,6 +69,17 @@ def main():
         model_args["in_channels"],
         model_args["num_classes"],
         model_args["dropout"],
+    )
+
+    print("Model summary:")
+    summary(
+        model,
+        input_size=(
+            train_args["batch_size"],
+            model_args["in_channels"],
+            256,
+            256,
+        ),
     )
 
     # Training mode

@@ -17,7 +17,7 @@ def create_overlay(img, mask, alpha=0.5, color=(0, 255, 0)):
     mask = mask * color
 
     # Overlay
-    overlay = img * (1 - alpha) + mask * alpha
+    overlay = np.clip(img * (1 - alpha) + mask * alpha, 0, 1)
     return overlay
 
 
