@@ -50,18 +50,30 @@ Installed tools related to Python (not VS-Code extensions) can be configured in 
 These are simple Jupyter notebooks that can be run cell by cell.
 
 `classificaton.ipynb` showcases different classifiers in a binary classification setting,
-where the dataset is rather small with a small class imbalance rate.
-It further shows the application of techniques like cross validation and hyperparameter optimization using [Scikit-Learn](https://scikit-learn.org/stable/index.html)
-and visualization using [Matplotlib](https://matplotlib.org/).
+where the dataset used is [Scikit-Learn](https://scikit-learn.org/stable/index.html)'s Breast-Cancer dataset, which is rather small and has slight class imbalance.
+It further shows the application of techniques like cross validation and hyperparameter optimization using Scikit-Learn and visualization using [Matplotlib](https://matplotlib.org/).
 
-`regression.ipynb` starts with data analysis using [Pandas](https://pandas.pydata.org/).
-It continues to showcase how to handle incomplete data using Scikit-Learn functionalities,
+![5-fold cross-validation with different classifiers](images/classifiers_cv.png "Cross-Validation")
+
+`regression.ipynb` starts with data analysis of Scikit-Learn's Diabetes dataset using [Pandas](https://pandas.pydata.org/) and [Seaborn](https://seaborn.pydata.org/index.html).
+It continues to demonstrate how to handle incomplete data (the incompleteness is manually added) using Scikit-Learn functionalities,
 and then applying cross validation and hyperparameter optimization to optimize the results of the trained model which is embedded in a pipeline.
+
+![Analysis of correlation between feature columns](images/correlation_matrix.png "Correlation Matrix")
 
 ## Unet
 
+A small Deep Learning subproject, which trains a U-Net to solve image segmentation tasks.
+In particular, we use a small dog image dataset with given ground-truth masks.
+The masks are binary masks that label each pixel depending on whether it belongs to the dog or not.
+The U-Net is trained on the small dataset and applied to predict such masks on 10 new dog pictures.
+There are good as well as bad results after a low number of training epochs:
+
+![Good prediction](images/good_prediction.png)
+![Bad prediction](images/bad_prediction.png)
+
 This showcases how a deep learning project can be modularly structured without Jupyter notebooks,
-making it command-line friendly, when one has to work on a remote server.
+making it command-line friendly, e.g. when working on a remote server is required.
 
 - `Unet/config/config.json`: Central configuration file for the whole pipeline.
 - `Unet/src`: Contains all the Python modules
@@ -72,7 +84,9 @@ making it command-line friendly, when one has to work on a remote server.
     - `main.py`: Entrypoint, starts the process depending on configuration.
 
 There are also `Unet/data` and `Unet/weights` that are ignored by Git
-but tracked via [Data Version Control (DVC)](https://dvc.org/).
+but tracked via [Data Version Control (DVC)](https://dvc.org/),
+a tool that, combined with Git, facilitates the versioning of datasets (but also different kind of files).
+
 
 To run the process:
 1. Get data using `dvc pull`
