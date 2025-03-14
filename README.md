@@ -17,7 +17,7 @@ Requirements:
 ### Docker
 
 The dependencies available in the environment are described inside `Dockerfile`.
-The base image uses micromamba package manager for conda-compatibility, speed, and minimal default packages.
+The base image uses [Micromamba](https://mamba.readthedocs.io/en/latest/index.html) package manager for conda-compatibility, speed, and minimal default packages.
 The base image also contains cuda runtime to ease the installation of CUDA-enabled Pytorch.
 
 > Depending on the Nvidia driver, the base image tag and Pytorch installation might require some changes.
@@ -45,6 +45,8 @@ Additional extensions can be added here.
 
 Installed tools related to Python (not VS-Code extensions) can be configured in `pyproject.toml`.
 
+Even though dependencies are handled through Micromamba inside `Dockerfile`, we still demonstrate dependency management with package manager [Poetry](https://python-poetry.org/), a tool to facilitate dependency management and packaging for Python projects.
+
 ## Notebooks
 
 These are simple Jupyter notebooks that can be run cell by cell.
@@ -67,14 +69,17 @@ A small Deep Learning subproject, which trains a U-Net to solve image segmentati
 In particular, a small dog image dataset with given ground-truth masks is used here.
 The masks are binary masks that label each pixel depending on whether it belongs to the dog or not.
 The U-Net is trained on the small dataset and applied to predict such masks on 10 new dog pictures.
-There are good as well as bad results after only a low number of training epochs:
+There are good as well as bad results (depending on the "complexity" of the image) after only a low number of training epochs:
 
 ![Good prediction](images/good_prediction.png)
 ![Bad prediction](images/bad_prediction.png)
 
 This showcases how a deep learning project can be modularly structured without Jupyter notebooks,
 making it command-line friendly, e.g. when working on a remote server is required.
+It also shows familiarity with the deep learning framework [PyTorch](https://pytorch.org/),
+using its modules to build the datasets, model and training pipeline.
 
+Here are the core modules:
 - `Unet/config/config.json`: Central configuration file for the whole pipeline.
 - `Unet/src`: Contains all the Python modules
     - `dataset.py`: Implements dataset used during training and inference.
