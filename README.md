@@ -18,7 +18,7 @@ Requirements:
 
 The dependencies available in the environment are described inside `Dockerfile`.
 The base image uses micromamba package manager for conda-compatibility, speed, and minimal default packages.
-The base image also contains cuda runtime to enable ease the installation of CUDA-enabled Pytorch.
+The base image also contains cuda runtime to ease the installation of CUDA-enabled Pytorch.
 
 > Depending on the Nvidia driver, the base image tag and Pytorch installation might require some changes.
 
@@ -56,7 +56,7 @@ It further shows the application of techniques like cross validation and hyperpa
 ![5-fold cross-validation with different classifiers](images/classifiers_cv.png "Cross-Validation")
 
 `regression.ipynb` starts with data analysis of Scikit-Learn's Diabetes dataset using [Pandas](https://pandas.pydata.org/) and [Seaborn](https://seaborn.pydata.org/index.html).
-It continues to demonstrate how to handle incomplete data (the incompleteness is manually added) using Scikit-Learn functionalities,
+It continues to demonstrate how to handle incomplete data (the incompleteness is manually added) using Scikit-Learn imputation techniques,
 and then applying cross validation and hyperparameter optimization to optimize the results of the trained model which is embedded in a pipeline.
 
 ![Analysis of correlation between feature columns](images/correlation_matrix.png "Correlation Matrix")
@@ -64,10 +64,10 @@ and then applying cross validation and hyperparameter optimization to optimize t
 ## Unet
 
 A small Deep Learning subproject, which trains a U-Net to solve image segmentation tasks.
-In particular, we use a small dog image dataset with given ground-truth masks.
+In particular, a small dog image dataset with given ground-truth masks is used here.
 The masks are binary masks that label each pixel depending on whether it belongs to the dog or not.
 The U-Net is trained on the small dataset and applied to predict such masks on 10 new dog pictures.
-There are good as well as bad results after a low number of training epochs:
+There are good as well as bad results after only a low number of training epochs:
 
 ![Good prediction](images/good_prediction.png)
 ![Bad prediction](images/bad_prediction.png)
@@ -90,6 +90,7 @@ a tool that, combined with Git, facilitates the versioning of datasets (but also
 
 To run the process:
 1. Get data using `dvc pull`
+    - Requires authentication for security reason, so it's better to use some other dataset
 2. Navigate to `Unet` via `cd Unet`
 3. Run `python main.py`
     - With argument `--config <path/to/some/config/file>` for specific config file
