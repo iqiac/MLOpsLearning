@@ -18,3 +18,14 @@ disable = [
   "missing-class-docstring",
   "missing-function-docstring",
 ]
+
+# Configure package management tool poetry
+[tool.poetry]
+name = "mlopslearning"
+version = "0.1.0"
+description = "Project to learn MLOps"
+authors = ["Cai Qi <iqiacs@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+
+[tool.poetry.dependencies]
