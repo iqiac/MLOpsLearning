@@ -15,7 +15,8 @@
         "ms-python.black-formatter",
         "ms-python.isort",
         "ms-toolsai.jupyter",
-        "Iterative.dvc"
+        "Iterative.dvc",
+        "tamasfe.even-better-toml"
       ]
     }
   },
