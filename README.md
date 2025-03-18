@@ -8,7 +8,7 @@ It demonstrates basic knowledge in machine learning and common tools used for ma
 For consistency, the project runs in a containerized environment.
 Requirements:
 - [Docker, Docker-Compose](https://docs.docker.com/desktop/setup/install/linux/ubuntu/)
-- [nvidia-container-toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) if GPU-acceleration is available and desired
+- [nvidia-container-toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
 - [VS Code](https://code.visualstudio.com/download)
 - [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
@@ -45,6 +45,9 @@ Additional extensions can be added here.
 
 Installed tools related to Python (not VS-Code extensions) can be configured in `pyproject.toml`.
 
+Installed VS-Code extensions related to Python enable live formatting and linting of the code.
+They are configured through `settings.json` and `pyproject.toml`.
+
 Even though dependencies are handled through Micromamba inside `Dockerfile`, we still demonstrate dependency management with package manager [Poetry](https://python-poetry.org/), a tool to facilitate dependency management and packaging for Python projects.
 
 ## Notebooks
@@ -55,13 +58,13 @@ These are simple Jupyter notebooks that can be run cell by cell.
 where the dataset used is [Scikit-Learn](https://scikit-learn.org/stable/index.html)'s Breast-Cancer dataset, which is rather small and has slight class imbalance.
 It further shows the application of techniques like cross validation and hyperparameter optimization using Scikit-Learn and visualization using [Matplotlib](https://matplotlib.org/).
 
-![5-fold cross-validation with different classifiers](images/classifiers_cv.png "Cross-Validation")
+![5-fold cross-validation with different classifiers](doc_images/classifiers_cv.png "Cross-Validation")
 
 `regression.ipynb` starts with data analysis of Scikit-Learn's Diabetes dataset using [Pandas](https://pandas.pydata.org/) and [Seaborn](https://seaborn.pydata.org/index.html).
 It continues to demonstrate how to handle incomplete data (the incompleteness is manually added) using Scikit-Learn imputation techniques,
 and then applying cross validation and hyperparameter optimization to optimize the results of the trained model which is embedded in a pipeline.
 
-![Analysis of correlation between feature columns](images/correlation_matrix.png "Correlation Matrix")
+![Analysis of correlation between feature columns](doc_images/correlation_matrix.png "Correlation Matrix")
 
 ## Unet
 
@@ -71,13 +74,14 @@ The masks are binary masks that label each pixel depending on whether it belongs
 The U-Net is trained on the small dataset and applied to predict such masks on 10 new dog pictures.
 There are good as well as bad results (depending on the "complexity" of the image) after only a low number of training epochs:
 
-![Good prediction](images/good_prediction.png)
-![Bad prediction](images/bad_prediction.png)
+![Good prediction](doc_images/good_prediction.png)
+![Bad prediction](doc_images/bad_prediction.png)
 
 This showcases how a deep learning project can be modularly structured without Jupyter notebooks,
 making it command-line friendly, e.g. when working on a remote server is required.
 It also shows familiarity with the deep learning framework [PyTorch](https://pytorch.org/),
 using its modules to build the datasets, model and training pipeline.
+Furthermore, to tackle the problem of insufficient data, image augmentations are used to improve model training.
 
 Here are the core modules:
 - `Unet/config/config.json`: Central configuration file for the whole pipeline.
@@ -95,7 +99,6 @@ a tool that, combined with Git, facilitates the versioning of datasets (but also
 
 To run the process:
 1. Get data using `dvc pull`
-    - Requires authentication for security reason, so it's better to use some other dataset
 2. Navigate to `Unet` via `cd Unet`
 3. Run `python main.py`
     - With argument `--config <path/to/some/config/file>` for specific config file
