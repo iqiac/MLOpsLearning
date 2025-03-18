@@ -1,6 +1,8 @@
 import argparse
 import json
+import random
 
+import numpy as np
 import torch
 from dataset import SegmentationDataset
 from model import UNet
@@ -20,6 +22,8 @@ def save_json(path, data):
 
 
 def set_seed(seed):
+    np.random.seed(seed)
+    random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     print(f"Seed set to {seed}")
@@ -77,8 +81,8 @@ def main():
         input_size=(
             train_args["batch_size"],
             model_args["in_channels"],
-            256,
-            256,
+            data_args["train_resize"][0],
+            data_args["train_resize"][1],
         ),
     )
 
@@ -89,6 +93,7 @@ def main():
         dataset = SegmentationDataset(
             data_args["img_path"],
             data_args["mask_path"],
+            data_args["augment"],
             data_args["train_resize"],
         )
 

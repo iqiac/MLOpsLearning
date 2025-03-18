@@ -30,6 +30,7 @@
         ]
     },
     "data": {
+        "augment": true,
         "img_path": "../data/Images",
         "mask_path": "../data/Labels",
         "predict_src": "../data/InferenceImgs",

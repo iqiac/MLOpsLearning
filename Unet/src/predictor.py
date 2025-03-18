@@ -70,7 +70,9 @@ class Predictor:
 
     def predict(self):
         if self.weights_path:
-            self.model.load_state_dict(torch.load(self.weights_path))
+            self.model.load_state_dict(
+                torch.load(self.weights_path, map_location=self.device)
+            )
         else:
             print("No pretrained weights provided!")
 
