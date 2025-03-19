@@ -110,6 +110,7 @@ To run the process:
 
 Training mode will train the model, save its weights (if save path given),
 and plot the training and validation performance.
+Besides printing and plotting using standard output and matplotlib, each run is also tracked via [MLflow](https://mlflow.org/), a tool that is capable to managing entire machine learning lifecycles and streamlining the whole workflow.
 
 Inference mode will take the given weights and predict on given directory with images.
 This will produce image triplets of orignal image, predicted segmentation mask, and an overlay.
