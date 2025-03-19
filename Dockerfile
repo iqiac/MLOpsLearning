@@ -18,7 +18,8 @@ RUN micromamba install -n base -y \
   scikit-learn \
   seaborn \
   opencv \
-  dvc
+  dvc \
+  mlflow
 RUN micromamba update --all -y && micromamba clean --all -y
 
 # pytorch-cuda 12.6 needs special care,

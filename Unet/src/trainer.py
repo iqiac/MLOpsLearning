@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import mlflow
 import torch
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
@@ -50,6 +51,7 @@ class Trainer:
         self.model = model
         self.dataset = dataset
 
+        self.mlflow_uri = train_args["mlflow_uri"]
         self.use_pretrained = train_args["use_pretrained"]
         self.train_val_split = train_args["train_val_split"]
         self.epochs = train_args["epochs"]
@@ -90,64 +92,90 @@ class Trainer:
         train_losses, val_losses = [], []
         train_dcs, val_dcs = [], []
 
+        # Initialize mlflow
+        mlflow.set_tracking_uri(self.mlflow_uri)
+        mlflow.set_experiment("Unet")
+        mlflow.pytorch.autolog()
+
         # Train model
-        for epoch in tqdm(range(self.epochs)):
-            self.model.train()  # Set model to training mode
+        with mlflow.start_run():
+            mlflow.log_params(
+                {
+                    "epochs": self.epochs,
+                    "batch_size": self.batch_size,
+                    "lr": self.lr,
+                }
+            )
+            for epoch in tqdm(range(self.epochs)):
+                self.model.train()  # Set model to training mode
 
-            train_loss, val_loss = 0, 0
-            train_dc, val_dc = 0, 0
+                train_loss, val_loss = 0, 0
+                train_dc, val_dc = 0, 0
 
-            for img, mask in tqdm(train_loader, position=0, leave=True):
-                img = img.float().to(self.device)
-                mask = mask.float().to(self.device)
-
-                # Perform forward pass and calculate training loss and dc
-                pred = self.model(img)
-                loss = loss_fn(pred, mask)
-                dc = dice_coefficient(mask, pred)
-
-                # Add loss and dc to running total
-                train_loss += loss.item()
-                train_dc += dc.item()
-
-                # Zero the gradients
-                optimizer.zero_grad()
-
-                # Perform backward pass and update weights
-                loss.backward()
-                optimizer.step()
-
-            # Add average loss and dc to list
-            train_losses.append(train_loss / len(train_loader))
-            train_dcs.append(train_dc / len(train_loader))
-
-            # Evaluate model on validation set
-            self.model.eval()  # Set model to evaluation mode
-            with torch.no_grad():
-                for img, mask in tqdm(val_loader, position=0, leave=True):
+                for img, mask in tqdm(train_loader, position=0, leave=True):
                     img = img.float().to(self.device)
                     mask = mask.float().to(self.device)
 
-                    # Perform forward pass and calculate validation loss and dc
+                    # Perform forward pass and calculate training loss and dc
                     pred = self.model(img)
                     loss = loss_fn(pred, mask)
                     dc = dice_coefficient(mask, pred)
 
                     # Add loss and dc to running total
-                    val_loss += loss.item()
-                    val_dc += dc.item()
+                    train_loss += loss.item()
+                    train_dc += dc.item()
 
-            # Add average loss and dc to list
-            val_losses.append(val_loss / len(val_loader))
-            val_dcs.append(val_dc / len(val_loader))
+                    # Zero the gradients
+                    optimizer.zero_grad()
 
-            print("-" * 30)
-            print(f"Training Loss Epoch {epoch + 1}: {train_losses[-1]:.5f}")
-            print(f"Training DC Epoch {epoch + 1}: {train_dcs[-1]:.5f}")
-            print()
-            print(f"Validation Loss Epoch {epoch + 1}: {val_losses[-1]:.5f}")
-            print(f"Validation DC Epoch {epoch + 1}: {val_dcs[-1]:.5f}")
-            print("-" * 30)
+                    # Perform backward pass and update weights
+                    loss.backward()
+                    optimizer.step()
+
+                # Add average loss and dc to list
+                train_losses.append(train_loss / len(train_loader))
+                train_dcs.append(train_dc / len(train_loader))
+
+                # Evaluate model on validation set
+                self.model.eval()  # Set model to evaluation mode
+                with torch.no_grad():
+                    for img, mask in tqdm(val_loader, position=0, leave=True):
+                        img = img.float().to(self.device)
+                        mask = mask.float().to(self.device)
+
+                        # Perform forward pass and calculate validation loss and dc
+                        pred = self.model(img)
+                        loss = loss_fn(pred, mask)
+                        dc = dice_coefficient(mask, pred)
+
+                        # Add loss and dc to running total
+                        val_loss += loss.item()
+                        val_dc += dc.item()
+
+                # Add average loss and dc to list
+                val_losses.append(val_loss / len(val_loader))
+                val_dcs.append(val_dc / len(val_loader))
+
+                print("-" * 30)
+                print(
+                    f"Training Loss Epoch {epoch + 1}: {train_losses[-1]:.5f}"
+                )
+                print(f"Training DC Epoch {epoch + 1}: {train_dcs[-1]:.5f}")
+                print()
+                print(
+                    f"Validation Loss Epoch {epoch + 1}: {val_losses[-1]:.5f}"
+                )
+                print(f"Validation DC Epoch {epoch + 1}: {val_dcs[-1]:.5f}")
+                print("-" * 30)
+
+                # Log metrics to mlflow
+                mlflow.log_metric("train_loss", train_losses[-1], epoch + 1)
+                mlflow.log_metric("train_dc", train_dcs[-1], epoch + 1)
+                mlflow.log_metric("val_loss", val_losses[-1], epoch + 1)
+                mlflow.log_metric("val_dc", val_dcs[-1], epoch + 1)
+
+        # Log model to mlflow
+        mlflow.pytorch.log_model(self.model, "model")
 
         # Save model weights
         if self.save_path:

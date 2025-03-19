@@ -11,6 +11,7 @@
         "dropout": 0.1
     },
     "trainer": {
+        "mlflow_uri": "http://localhost:5000",
         "use_pretrained": false,
         "train_val_split": [
             0.8,
