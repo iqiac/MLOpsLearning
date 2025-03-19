@@ -98,8 +98,8 @@ a tool that, combined with Git, facilitates the versioning of datasets (but also
 
 
 To run the process:
-1. Get data using `dvc pull`
-2. Navigate to `Unet` via `cd Unet`
+1. Get data using `dvc pull` or use different dataset
+2. Navigate to `Unet/src` via `cd Unet/src`
 3. Run `python main.py`
     - With argument `--config <path/to/some/config/file>` for specific config file
     - With argument
@@ -110,6 +110,7 @@ To run the process:
 
 Training mode will train the model, save its weights (if save path given),
 and plot the training and validation performance.
+Besides printing and plotting using standard output and matplotlib, each run is also tracked via [MLflow](https://mlflow.org/), a tool that is capable to managing entire machine learning lifecycles and streamlining the whole workflow.
 
 Inference mode will take the given weights and predict on given directory with images.
 This will produce image triplets of orignal image, predicted segmentation mask, and an overlay.
