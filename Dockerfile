@@ -13,7 +13,7 @@ RUN micromamba install -n base -y \
   black \
   isort \
   notebook \
-  pandas \
+  polars \
   matplotlib \
   scikit-learn \
   seaborn \

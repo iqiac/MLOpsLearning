@@ -99,8 +99,9 @@ a tool that, combined with Git, facilitates the versioning of datasets (but also
 
 To run the process:
 1. Get data using `dvc pull`
-2. Navigate to `Unet` via `cd Unet`
-3. Run `python main.py`
+2. Navigate to `Unet` via `cd Unet/src`
+3. Star Mlflow server with `mlflow server`
+4. Run `python main.py`
     - With argument `--config <path/to/some/config/file>` for specific config file
     - With argument
         - `--mode train` if only training desired
