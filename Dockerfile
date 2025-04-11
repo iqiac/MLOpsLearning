@@ -10,6 +10,7 @@ RUN micromamba install -n base -y \
   poetry \
   pytest \
   pylint \
+  pyright \
   black \
   isort \
   notebook \

@@ -8,6 +8,19 @@ skip-magic-trailing-comma = true
 [tool.isort]
 profile = "black"
 
+# Configure type checking tool pyright
+[tool.pyright]
+include = ["src"]
+exclude = ["tests"]
+typeCheckingMode = "basic"
+
+# Configure linting tool pylint
+[tool.pylint.basic]
+variable-naming-style = "snake_case"
+function-naming-style = "snake_case"
+class-naming-style = "PascalCase"
+module-naming-style = "snake_case"
+
 # Configure linting tool pylint
 [tool.pylint.message_control]
 disable = [
@@ -16,7 +29,15 @@ disable = [
   "missing-module-docstring",
   "missing-class-docstring",
   "missing-function-docstring",
+  "unspecified-encoding",
+  "too-few-public-methods",
+  "protected-access",
 ]
+
+# Configure testing tool pytest
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
 
 # Configure package management tool poetry
 [tool.poetry]
